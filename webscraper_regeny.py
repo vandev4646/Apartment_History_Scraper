@@ -1,19 +1,11 @@
 from curl_cffi import requests
 from bs4 import BeautifulSoup
 from datetime import date
-import csv
-import os
+
+from shared_utilities import Apartment, db_write
 
 #This program scraps data for the Lincoln Street Appartments in Verona
 #NEED TO ADD ERROR HANDLING AND REPORT ON ERRORS
-
-class Apartment():
-    def __init__(self, url, company, building, city, filename):
-        self.url = url
-        self.company = company
-        self.building = building
-        self.city = city
-        self.filename = filename
 
 today = date.today()
 formated_date = today.strftime("%m_%d_%Y")
@@ -29,10 +21,8 @@ returns: An tuple with the following data points
 - Bed
 - Bath
 - Sq Ft
-- Available Date
 - Rent Amount
-- Application Fee
-- Security Deposit
+- QTY
 - Date Logged
 """
 def list_data(url, company, building, city):
@@ -53,32 +43,14 @@ def list_data(url, company, building, city):
         bath = bbs[1].text.strip().split()[0]
     if bslen >= 3:
         sqft = bbs[2].text.strip().split()[1]
-    if bslen >= 4:
-        available = bbs[3].text.strip().split()[2]
     list_items = soup.find_all(class_="list__item")
     rent = list_items[0].text.split()[1]
-    application_fee = list_items[1].text.split()[2]
-    security_deposit = list_items[2].text.split()[2]
+    formated_rent = float(rent.replace("$", "").replace(",", ""))
 
     #return all the data fields collected as a tuple
-    return(company, building, city, identifier, bed, bath, sqft, available, rent,application_fee, security_deposit, formated_date)
+    return(company, building, city, identifier, bed, bath, sqft, formated_rent, 1, formated_date)
 
-"""
-parm: a tuple containing appartment data
-This function writes the tuple data to a csv
-"""
-def csv_write(listing_data, filename):
-    headers = [
-    "Company", "Building", "City", "Identifier", "Bed", "Bath", "Sq Ft", "Available Date", "Rent Amount", "Application Fee",
-    "Security Deposit", "Date Logged"
-    ]
-    file_exists = os.path.isfile(filename)
 
-    with open(filename, mode='a', newline='', encoding='utf-8') as file:
-        writer = csv.writer(file)
-        if not file_exists:
-            writer.writerow(headers)
-        writer.writerows(listing_data)
 
 def apartment_data(apartment: Apartment):
     URL = apartment.url
@@ -93,42 +65,43 @@ def apartment_data(apartment: Apartment):
     for url in urls:
         listing_data.append(list_data(url=url, company=apartment.company, building=apartment.building, city=apartment.city))
     #write data from all listings to the csv
-    csv_write(listing_data=listing_data, filename=apartment.filename)
+    #csv_write(listing_data=listing_data, filename=apartment.filename)
+    db_write(listing_data=listing_data)
 
 def main():
     prairie = Apartment(
         "https://regencypm.com/prairie-crest-apartments-verona/",
-        "Regency Property Management Inc",
-        "Prairie Crest Apartments",
-        "Verona",
+        2, #"Regency Property Management Inc",
+        8, #"Prairie Crest Apartments",
+        3, #"Verona",
         f'Prairie_Crest_Listings_{formated_date}.csv'
     )
     lincoln = Apartment(
         "https://regencypm.com/lincoln-street-verona/",
-        "Regency Property Management Inc",
-        "Lincoln Street Apartments",
-        "Verona",
+        2, #"Regency Property Management Inc",
+        7, #"Lincoln Street Apartments",
+        3, #"Verona",
         f'Lincoln_Street_Listings_{formated_date}.csv'
     )
     courtyard = Apartment(
         "https://regencypm.com/courtyard-apartments-madison/",
-        "Regency Property Management Inc",
-        "Courtyard Apartments",
-        "Madison",
+        2, #"Regency Property Management Inc",
+        3, #"Courtyard Apartments",
+        2, #"Madison",
         f'Courtyard_Listings_{formated_date}.csv'
     )
     homestead = Apartment(
         "https://regencypm.com/homestead-luxury-rentals-verona/",
-        "Regency Property Management Inc",
-        "Homestead Luxury Apartments",
-        "Verona",
+        2, #"Regency Property Management Inc",
+        5, #"Homestead Luxury Apartments",
+        3, #"Verona",
         f'Homestead_Luxury_Listings_{formated_date}.csv'
     )
     outlook = Apartment(
         "https://regencypm.com/the-outlook-at-1000-oaks-verona/",
-        "Regency Property Management Inc",
-        "The Outlook at 1000 Oaks Apartments",
-        "Verona",
+        2, #"Regency Property Management Inc",
+        10, #"The Outlook at 1000 Oaks Apartments",
+        3, #"Verona",
         f'The_Outlook_Listings_{formated_date}.csv'
     )
 

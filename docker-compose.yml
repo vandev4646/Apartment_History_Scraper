@@ -1,0 +1,8 @@
+version: '3.8'
+
+services:
+  scraper:
+    build: .
+    container_name: python_webscraper
+    env_file:
+      - .env

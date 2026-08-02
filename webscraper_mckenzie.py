@@ -1,40 +1,18 @@
 from curl_cffi import requests
 from bs4 import BeautifulSoup
 from datetime import date
-import csv
-import os
 import re
+
+from shared_utilities import Apartment, db_write
 
 #This program scraps data for the Lincoln Street Appartments in Verona
 #NEED TO ADD ERROR HANDLING AND REPORT ON ERRORS
 
-class Apartment():
-    def __init__(self, url, company, building, city, filename):
-        self.url = url
-        self.company = company
-        self.building = building
-        self.city = city
-        self.filename = filename
+
 
 today = date.today()
 formated_date = today.strftime("%m_%d_%Y")
 
-"""
-parm: a tuple containing appartment data
-This function writes the tuple data to a csv
-"""
-def csv_write(listing_data, filename):
-    headers = [
-    "Company", "Building", "City", "Identifier", "Bed", "Bath", "Sq Ft", "Available Date", "Rent Amount", "Application Fee",
-    "Security Deposit", "Date Logged"
-    ]
-    file_exists = os.path.isfile(filename)
-
-    with open(filename, mode='a', newline='', encoding='utf-8') as file:
-        writer = csv.writer(file)
-        if not file_exists:
-            writer.writerow(headers)
-        writer.writerows(listing_data)
 
 """
 collects the following data points for each item
@@ -45,10 +23,8 @@ collects the following data points for each item
 - Bed
 - Bath
 - Sq Ft
-- Available Date
 - Rent Amount
-- Application Fee
-- Security Deposit
+- QTY
 - Date Logged
 """
 def apartment_data(apartment: Apartment):
@@ -59,7 +35,7 @@ def apartment_data(apartment: Apartment):
     listings = soup.find_all(class_=re.compile("row row-eq-height vmiddle row-striped br"))
     for item in listings:
         identifier = available = "n/a"
-        bed = bath = sqft = rent = application_fee = security_deposit = 0
+        bed = bath = sqft = rent = 0
         available = item.find(class_="avail-time").text.split()[0]
         if available != 'Not':
             identifier = item.find(class_="col-md-3 col-sm-12 col-xs-12 vmiddle text-center-sm text-center-xs").text.strip()
@@ -68,68 +44,70 @@ def apartment_data(apartment: Apartment):
             bath = size[4]
             sqft = size[6]
             rent = item.find(class_="col-md-2 col-sm-6 col-xs-6 text-center").text.split()[1]
-            data = (apartment.company, apartment.building, apartment.city, identifier, bed, bath, sqft, available, rent,application_fee, security_deposit, formated_date)
+            formated_rent = float(rent.replace("$", "").replace(",", ""))
+            data = (apartment.company, apartment.building, apartment.city, identifier, bed, bath, sqft, formated_rent, 1, formated_date)
             listing_data.append(data)
 
     #write data from all listings to the csv
-    csv_write(listing_data=listing_data, filename=apartment.filename)
+    #csv_write(listing_data=listing_data, filename=apartment.filename)
+    db_write(listing_data = listing_data)
 
 def main():
     
     timber = Apartment(
         "https://www.mckenzie-apartments.com/properties/timber-valley/",
-        "McKenzie Apartment Company",
-        "Timber Valley Apartments",
-        "Madison",
+        1, #"McKenzie Apartment Company",
+        11, #"Timber Valley Apartments",
+        2, #"Madison",
         f'Timber_Valley_Listings_{formated_date}.csv'
     )
     whispering = Apartment(
         "https://www.mckenzie-apartments.com/properties/whispering-hills/",
-        "McKenzie Apartment Company",
-        "Whispering Hills Apartments",
-        "Madison",
+        1, #"McKenzie Apartment Company",
+        13, #"Whispering Hills Apartments",
+        2, #"Madison",
         f'Whispering_Hills_Listings_{formated_date}.csv'
     )
     waterside = Apartment(
         "https://www.mckenzie-apartments.com/properties/waterside/",
-        "McKenzie Apartment Company",
-        "Waterside Apartments",
-        "Madison",
+        1, #"McKenzie Apartment Company",
+        12, #"Waterside Apartments",
+        2, #"Madison",
         f'Waterside_Listings_{formated_date}.csv'
     )
     siena = Apartment(
         "https://www.mckenzie-apartments.com/properties/siena-ridge/",
-        "McKenzie Apartment Company",
-        "Siena Ridge Apartments",
-        "Verona",
+        1, #"McKenzie Apartment Company",
+        9, #"Siena Ridge Apartments",
+        3, #"Verona",
         f'Siena_Ridge_Listings_{formated_date}.csv'
     )
     legacy = Apartment(
         "https://www.mckenzie-apartments.com/properties/legacy-apartments/",
-        "McKenzie Apartment Company",
-        "Legacy Apartments",
-        "Madison",
+        1, #"McKenzie Apartment Company",
+        6, #"Legacy Apartments",
+        2, #"Madison",
         f'Legacy_Listings_{formated_date}.csv'
     )
     highland = Apartment(
         "https://www.mckenzie-apartments.com/properties/highland-ridge/",
-        "McKenzie Apartment Company",
-        "Highland Ridge Apartments",
-        "Middleton",
+        1, #"McKenzie Apartment Company",
+        4, #"Highland Ridge Apartments",
+        4, #"Middleton",
         f'Highland_Ridge_Listings_{formated_date}.csv'
     )
     boulder_creek = Apartment(
         "https://www.mckenzie-apartments.com/properties/boulder-creek/",
-        "McKenzie Apartment Company",
-        "Boulder Creek Apartments",
-        "Madison",
+        1, #"McKenzie Apartment Company",
+        2, #"Boulder Creek Apartments",
+        2, #"Madison",
         f'Boulder_Creek_Listings_{formated_date}.csv'
     )
     blackhawk = Apartment(
         "https://www.mckenzie-apartments.com/properties/blackhawk-trails/",
-        "McKenzie Apartment Company",
-        "Blackhawk Trails Apartments",
-        "Madison",
+        1, #"McKenzie Apartment Company",
+        1, #"Blackhawk Trails Apartments",
+        2, #"Madison",
         f'Blackhawk_Trails_Listings_{formated_date}.csv'
     )
 
