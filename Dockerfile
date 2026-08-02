@@ -14,4 +14,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Run the scraper script when the container starts
-CMD ["python", "webscraper_main.py"]
+CMD ["bash"]
+
