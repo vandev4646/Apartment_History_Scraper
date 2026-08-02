@@ -48,7 +48,7 @@ def list_data(url, company, building, city):
     formated_rent = float(rent.replace("$", "").replace(",", ""))
 
     #return all the data fields collected as a tuple
-    return(company, building, city, identifier, bed, bath, sqft, formated_rent, 1, formated_date)
+    return(building, identifier, bed, bath, sqft, formated_rent, 1, formated_date)
 
 
 

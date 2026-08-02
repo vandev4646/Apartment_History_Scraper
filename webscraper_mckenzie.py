@@ -16,9 +16,7 @@ formated_date = today.strftime("%m_%d_%Y")
 
 """
 collects the following data points for each item
-- Company
 - Building
-- City
 - Identifier (Address / Unit number if availabe otherwise the desription provided on site)
 - Bed
 - Bath
@@ -45,7 +43,7 @@ def apartment_data(apartment: Apartment):
             sqft = size[6]
             rent = item.find(class_="col-md-2 col-sm-6 col-xs-6 text-center").text.split()[1]
             formated_rent = float(rent.replace("$", "").replace(",", ""))
-            data = (apartment.company, apartment.building, apartment.city, identifier, bed, bath, sqft, formated_rent, 1, formated_date)
+            data = (apartment.building, identifier, bed, bath, sqft, formated_rent, 1, formated_date)
             listing_data.append(data)
 
     #write data from all listings to the csv
