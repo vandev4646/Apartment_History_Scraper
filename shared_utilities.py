@@ -27,7 +27,7 @@ def csv_write(listing_data, filename):
             writer.writerow(headers)
         writer.writerows(listing_data)
 
-def db_wrtie(listing_data):
+def db_write(listing_data):
     try:
         connection = psycopg2.connect(
             host = os.getenv("DB_HOST", "172.17.0.1"),
