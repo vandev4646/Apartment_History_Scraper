@@ -1,6 +1,12 @@
 services:
-  regency_scraper:
+  mckenzie_scraper:
     build: .
     command: python webscraper_mckenzie.py
+    env_file:
+      - .env
+
+  regeny_scraper:
+    build: .
+    command: python webscraper_regeny.py
     env_file:
       - .env
