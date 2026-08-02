@@ -43,7 +43,7 @@ def db_write(listing_data):
             cursor.execute("""
             INSERT INTO listings (
                 building_id, identifier, bed, bath, sq_ft, rent_amount, qty
-            ) VALUES (%i, %s, %s, %s, %i, %f, %i);
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s);
         """, (
             item[0], item[1], item[2], item[3], item[4], item[5], item[6], 
         ))
