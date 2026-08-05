@@ -123,7 +123,7 @@ def db_write_csv(listing_data):
     
             cursor = connection.cursor()
     
-            today = listing_data[0][12]
+            today = listing_data[0][11]
             yesterday = today - timedelta(days=1)
             date_31 = today - timedelta(days=31)
             date_61 = today - timedelta(days=61)
@@ -144,7 +144,7 @@ def db_write_csv(listing_data):
                 cursor.execute("""
                 INSERT INTO listings (
                     building_id, identifier, bed, bath, sq_ft, rent_amount, qty, days_vacant, date_logged
-                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);""", (item[1], item[3], item[4], item[5], item[6], item[8], 1, days_vacant, item[12]))
+                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);""", (item[1], item[3], item[4], item[5], item[6], item[8], 1, days_vacant, item[11]))
     
             #INSERT INTO SUMMARY TABLE
             average_vacant = total_days_vacant/num_listings
