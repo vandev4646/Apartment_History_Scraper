@@ -152,11 +152,11 @@ def db_write_csv(listing_data):
             average_vacant = total_days_vacant/num_listings
             #note if there is no 30 or 60 day for yesterday then set it equal to today
             cursor.execute("""SELECT COALESCE(MAX(units_30), %s), COALESCE(MAX(units_60), %s), COALESCE(MAX(vacant_30), %s), COALESCE(MAX(vacant_60), %s) FROM summary WHERE date_logged = %s AND building_id = %s;""", (num_listings, num_listings, average_vacant, average_vacant, yesterday, building_id))
-            print(cursor.fetchone()[1])
-            units_30 = cursor.fetchone()[0]
-            units_60 = cursor.fetchone()[1]
-            vacant_30 = cursor.fetchone()[2]
-            vacant_60 = cursor.fetchone()[3]
+            items = cursor.fetchone()
+            units_30 = items[0]
+            units_60 = items[1]
+            vacant_30 = items[2]
+            vacant_60 = items[3]
             print("Units 30 and 60")
             print(units_30)
             print(units_60)
