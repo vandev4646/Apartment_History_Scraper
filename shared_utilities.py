@@ -136,7 +136,7 @@ def db_write_csv(listing_data):
                 cursor.execute("""
                 SELECT COALESCE(MAX(days_vacant), 0) 
                 FROM listings 
-                WHERE date_logged = %s AND identifier = %s;""", (yesterday, item[1]))
+                WHERE date_logged = %s AND identifier = %s;""", (yesterday, item[3]))
     
                 days_vacant = cursor.fetchone()[0]+1;
                 total_days_vacant +=days_vacant
