@@ -2,6 +2,7 @@ import csv
 import os
 import psycopg2
 from datetime import date, timedelta
+from decimal import Decimal
 
 class Apartment():
     def __init__(self, url, company, building, city, filename):
@@ -149,7 +150,7 @@ def db_write_csv(listing_data):
                 ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);""", (item[1], item[3], item[4], item[5], item[6], item[8], 1, days_vacant, item[11]))
     
             #INSERT INTO SUMMARY TABLE
-            average_vacant = total_days_vacant/num_listings
+            average_vacant = Decimal(total_days_vacant) / Decimal(num_listings)
             #note if there is no 30 or 60 day for yesterday then set it equal to today
             cursor.execute("""SELECT COALESCE(MAX(units_30), %s), COALESCE(MAX(units_60), %s), COALESCE(MAX(vacant_30), %s), COALESCE(MAX(vacant_60), %s) FROM summary WHERE date_logged = %s AND building_id = %s;""", (num_listings, num_listings, average_vacant, average_vacant, yesterday, building_id))
             items = cursor.fetchone()
