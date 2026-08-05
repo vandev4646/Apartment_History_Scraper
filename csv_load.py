@@ -22,6 +22,7 @@ def main():
     }
     #get a list of all csv files in the current directory
     csv_files = glob.glob("*.csv")
+    csv_files.sort()
 
     for item in csv_files:
         data_list = []
