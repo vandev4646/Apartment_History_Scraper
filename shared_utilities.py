@@ -165,8 +165,9 @@ def db_write_csv(listing_data):
             print(vacant_60)
     
             cursor.execute("""SELECT COALESCE(MAX(units_available), %s), COALESCE(MAX(days_vacant), %s) FROM summary WHERE date_logged = %s AND building_id = %s;""", (num_listings, average_vacant, date_31, building_id))
-            units_31 = cursor.fetchone()[0]
-            vacant_31 = cursor.fetchone()[1]
+            items = cursor.fetchone()
+            units_31 = items[0]
+            vacant_31 = items[1]
             print("31 days and units")
             print(units_31)
             print(vacant_31)
@@ -177,8 +178,9 @@ def db_write_csv(listing_data):
             WHERE date_logged = %s AND building_id = %s;
             """, (num_listings, average_vacant, date_61, building_id))
     
-            units_61 = cursor.fetchone()[0]
-            vacant_61 = cursor.fetchone()[1]
+            items = cursor.fetchone()
+            units_61 = items[0]
+            vacant_61 = items[1]
             print("61 units and days")
             print(units_61)
             print(vacant_61)
