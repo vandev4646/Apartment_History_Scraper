@@ -138,8 +138,10 @@ def db_write_csv(listing_data):
                 FROM listings 
                 WHERE date_logged = %s AND identifier = %s;""", (yesterday, item[3]))
     
-                days_vacant = cursor.fetchone()[0]+1;
+                days_vacant = (cursor.fetchone()[0])+1;
                 total_days_vacant +=days_vacant
+                print("Vacant Days")
+                print(total_days_vacant)
     
                 cursor.execute("""
                 INSERT INTO listings (
@@ -154,10 +156,19 @@ def db_write_csv(listing_data):
             units_60 = cursor.fetchone()[1]
             vacant_30 = cursor.fetchone()[2]
             vacant_60 = cursor.fetchone()[3]
+            print("Units 30 and 60")
+            print(units_30)
+            print(units_60)
+            print("Vacant 30 and 60")
+            print(vacant_30)
+            print(vacant_60)
     
             cursor.execute("""SELECT COALESCE(MAX(units_available), %s), COALESCE(MAX(days_vacant), %s) FROM summary WHERE date_logged = %s AND building_id = %s;""", (num_listings, average_vacant, date_31, building_id))
             units_31 = cursor.fetchone()[0]
             vacant_31 = cursor.fetchone()[1]
+            print("31 days and units")
+            print(units_31)
+            print(vacant_31)
     
             cursor.execute("""
             SELECT COALESCE(MAX(units_available), %s), COALESCE(MAX(days_vacant), %s) 
@@ -167,6 +178,9 @@ def db_write_csv(listing_data):
     
             units_61 = cursor.fetchone()[0]
             vacant_61 = cursor.fetchone()[1]
+            print("61 units and days")
+            print(units_61)
+            print(vacant_61)
     
             units_30 = units_30 + ((num_listings-units_31)/30)
             units_60 = units_60 + ((num_listings-units_61)/30)
