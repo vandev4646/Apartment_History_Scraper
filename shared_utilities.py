@@ -130,7 +130,7 @@ def db_write_csv(listing_data):
     
             num_listings = len(listing_data)
             total_days_vacant = 0
-            building_id = listing_data[0][0]
+            building_id = listing_data[0][1]
     
             for item in listing_data:
                 cursor.execute("""
