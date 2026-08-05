@@ -1,12 +1,7 @@
 services:
-  mckenzie_scraper:
+  csv_load:
     build: .
-    command: python webscraper_mckenzie.py
+    command: python csv_load.py
     env_file:
       - .env
 
-  regeny_scraper:
-    build: .
-    command: python webscraper_regeny.py
-    env_file:
-      - .env

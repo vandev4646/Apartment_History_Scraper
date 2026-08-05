@@ -1,0 +1,6 @@
+Company,Building,City,Identifier,Bed,Bath,Sq Ft,Rent Amount,QTY,Date Logged
+5,"1005 Wild Willow Way #133, Verona, WI 53593",1,1,823,1770.0,1,08_05_2026
+5,"1005 Wild Willow Way #128, Verona, WI 53593",1,1,730,1700.0,1,08_05_2026
+5,"1005 Wild Willow Way #138, Verona, WI 53593",2,2,"1,151",2200.0,1,08_05_2026
+5,"1001 Wild Willow Way #209, Verona, WI 53593",2,1,"1,110",2100.0,1,08_05_2026
+5,"1001 Wild Willow Way #102, Verona, WI 53593",2,2,"1,100",2100.0,1,08_05_2026

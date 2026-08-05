@@ -51,7 +51,7 @@ def db_write(listing_data):
 
         for item in listing_data:
             cursor.execute("""
-            SELECT COALESCE(MAX(days_vacant), 1) 
+            SELECT COALESCE(MAX(days_vacant), 0) 
             FROM listings 
             WHERE date_logged = %s AND identifier = %s;""", (yesterday, item[1]))
 
@@ -104,6 +104,89 @@ def db_write(listing_data):
         #update this to save to a local log file
         print(f"Error saving to database: {e}")
 
+    finally:
+        if 'cursor' in locals() and cursor:
+            cursor.close()
+        if 'connection' in locals() and connection:
+            connection.close()
+
+#main def between db_write and this function is that this function lets you pass in the data logged
+def db_write_csv(listing_data):
+    try:
+            connection = psycopg2.connect(
+                host = os.getenv("DB_HOST", "172.17.0.1"),
+                port=os.getenv("DB_PORT", "5432"),
+                database=os.getenv("DB_NAME"),
+                user=os.getenv("DB_USER"),
+                password=os.getenv("DB_PASSWORD")
+            )
+    
+            cursor = connection.cursor()
+    
+            today = listing_data[0][12]
+            yesterday = today - timedelta(days=1)
+            date_31 = today - timedelta(days=31)
+            date_61 = today - timedelta(days=61)
+    
+            num_listings = len(listing_data)
+            total_days_vacant = 0
+            building_id = listing_data[0][0]
+    
+            for item in listing_data:
+                cursor.execute("""
+                SELECT COALESCE(MAX(days_vacant), 0) 
+                FROM listings 
+                WHERE date_logged = %s AND identifier = %s;""", (yesterday, item[1]))
+    
+                days_vacant = cursor.fetchone()[0]+1;
+                total_days_vacant +=days_vacant
+    
+                cursor.execute("""
+                INSERT INTO listings (
+                    building_id, identifier, bed, bath, sq_ft, rent_amount, qty, days_vacant, date_logged
+                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);""", (item[1], item[3], item[4], item[5], item[6], item[8], 1, days_vacant, item[12]))
+    
+            #INSERT INTO SUMMARY TABLE
+            average_vacant = total_days_vacant/num_listings
+            #note if there is no 30 or 60 day for yesterday then set it equal to today
+            cursor.execute("""SELECT COALESCE(MAX(units_30), %s), COALESCE(MAX(units_60), %s), COALESCE(MAX(vacant_30), %s), COALESCE(MAX(vacant_60), %s) FROM summary WHERE date_logged = %s AND building_id = %s;""", (num_listings, num_listings, average_vacant, average_vacant, yesterday, building_id))
+            units_30 = cursor.fetchone()[0]
+            units_60 = cursor.fetchone()[1]
+            vacant_30 = cursor.fetchone()[2]
+            vacant_60 = cursor.fetchone()[3]
+    
+            cursor.execute("""SELECT COALESCE(MAX(units_available), %s), COALESCE(MAX(days_vacant), %s) FROM summary WHERE date_logged = %s AND building_id = %s;""", (num_listings, average_vacant, date_31, building_id))
+            units_31 = cursor.fetchone()[0]
+            vacant_31 = cursor.fetchone()[1]
+    
+            cursor.execute("""
+            SELECT COALESCE(MAX(units_available), %s), COALESCE(MAX(days_vacant), %s) 
+            FROM summary 
+            WHERE date_logged = %s AND building_id = %s;
+            """, (num_listings, average_vacant, date_61, building_id))
+    
+            units_61 = cursor.fetchone()[0]
+            vacant_61 = cursor.fetchone()[1]
+    
+            units_30 = units_30 + ((num_listings-units_31)/30)
+            units_60 = units_60 + ((num_listings-units_61)/30)
+    
+            vacant_30 = vacant_30 + ((average_vacant-vacant_31)/30)
+            vacant_60 = vacant_60 + ((average_vacant-vacant_61)/30)
+    
+            cursor.execute("""
+            INSERT INTO summary(
+            date_logged, building_id, units_available, units_30, units_60, days_vacant, vacant_30, vacant_60
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s);""", (today, building_id, num_listings, units_30, units_60, average_vacant, vacant_30, vacant_60))
+    
+            connection.commit()
+    
+    except Exception as e:
+        if 'connection' in locals() and connection:
+            connection.rollback()
+        #update this to save to a local log file
+        print(f"Error saving to database: {e}")
+    
     finally:
         if 'cursor' in locals() and cursor:
             cursor.close()
