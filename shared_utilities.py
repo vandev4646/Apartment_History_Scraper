@@ -141,8 +141,6 @@ def db_write_csv(listing_data):
     
                 days_vacant = (cursor.fetchone()[0])+1;
                 total_days_vacant +=days_vacant
-                print("Vacant Days")
-                print(total_days_vacant)
     
                 cursor.execute("""
                 INSERT INTO listings (
