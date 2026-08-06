@@ -165,32 +165,43 @@ def db_write_csv(listing_data):
             print(vacant_30)
             print(vacant_60)
     
-            cursor.execute("""SELECT COALESCE(MAX(units_available), %s), COALESCE(MAX(days_vacant), %s) FROM summary WHERE date_logged = %s AND building_id = %s;""", (num_listings, average_vacant, date_31, building_id))
+            cursor.execute("""SELECT units_available, days_vacant FROM summary WHERE date_logged = %s AND building_id = %s;""", (date_31, building_id))
             items = cursor.fetchone()
-            units_31 = items[0]
-            vacant_31 = items[1]
-            print("31 days and units")
-            print(units_31)
-            print(vacant_31)
+            if items is None:
+                vacant_30 = average_vacant
+                units_30 = num_listings
+            else:
+                units_31 = items[0]
+                vacant_31 = items[1]
+                print("31 days and units")
+                print(units_31)
+                print(vacant_31)
+                vacant_30 = vacant_30 + ((average_vacant-vacant_31)/30)
+                units_30 = units_30 + ((num_listings-units_31)/30)
+                
     
             cursor.execute("""
-            SELECT COALESCE(MAX(units_available), %s), COALESCE(MAX(days_vacant), %s) 
+            SELECT units_available, days_vacant 
             FROM summary 
             WHERE date_logged = %s AND building_id = %s;
-            """, (num_listings, average_vacant, date_61, building_id))
+            """, (date_61, building_id))
     
             items = cursor.fetchone()
-            units_61 = items[0]
-            vacant_61 = items[1]
-            print("61 units and days")
-            print(units_61)
-            print(vacant_61)
+            if items is None:
+                vacant_60 = average_vacant
+                units_60 = num_listings
+            else:
+                units_61 = items[0]
+                vacant_61 = items[1]
+                print("61 units and days")
+                print(units_61)
+                print(vacant_61)
     
-            units_30 = units_30 + ((num_listings-units_31)/30)
-            units_60 = units_60 + ((num_listings-units_61)/30)
+            
+                units_60 = units_60 + ((num_listings-units_61)/30)
+                vacant_60 = vacant_60 + ((average_vacant-vacant_61)/30)
     
-            vacant_30 = vacant_30 + ((average_vacant-vacant_31)/30)
-            vacant_60 = vacant_60 + ((average_vacant-vacant_61)/30)
+            
     
             cursor.execute("""
             INSERT INTO summary(
