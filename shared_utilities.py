@@ -158,12 +158,6 @@ def db_write_csv(listing_data):
             units_60 = items[1]
             vacant_30 = items[2]
             vacant_60 = items[3]
-            print("Units 30 and 60")
-            print(units_30)
-            print(units_60)
-            print("Vacant 30 and 60")
-            print(vacant_30)
-            print(vacant_60)
     
             cursor.execute("""SELECT units_available, days_vacant FROM summary WHERE date_logged = %s AND building_id = %s;""", (date_31, building_id))
             items = cursor.fetchone()
@@ -173,9 +167,6 @@ def db_write_csv(listing_data):
             else:
                 units_31 = items[0]
                 vacant_31 = items[1]
-                print("31 days and units")
-                print(units_31)
-                print(vacant_31)
                 vacant_30 = vacant_30 + ((average_vacant-vacant_31)/30)
                 units_30 = units_30 + ((num_listings-units_31)/30)
                 
@@ -192,11 +183,7 @@ def db_write_csv(listing_data):
                 units_60 = num_listings
             else:
                 units_61 = items[0]
-                vacant_61 = items[1]
-                print("61 units and days")
-                print(units_61)
-                print(vacant_61)
-    
+                vacant_61 = items[1]    
             
                 units_60 = units_60 + ((num_listings-units_61)/30)
                 vacant_60 = vacant_60 + ((average_vacant-vacant_61)/30)
