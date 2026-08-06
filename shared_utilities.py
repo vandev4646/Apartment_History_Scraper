@@ -49,8 +49,6 @@ def db_write(listing_data):
             num_listings = len(listing_data)
             total_days_vacant = 0
             building_id = listing_data[0][0]
-            print("building_id")
-            print(building_id)
     
             for item in listing_data:
                 cursor.execute("""
@@ -60,25 +58,21 @@ def db_write(listing_data):
     
                 days_vacant = (cursor.fetchone()[0])+1;
                 total_days_vacant +=days_vacant
-                print("total days")
-                print(total_days_vacant)
     
                 cursor.execute("""
                 INSERT INTO listings (
                     building_id, identifier, bed, bath, sq_ft, rent_amount, qty, days_vacant
-                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);""", (item[0], item[1], item[2], item[3], item[4], item[5], item[6], days_vacant))
+                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s);""", (item[0], item[1], item[2], item[3], item[4], item[5], item[6], days_vacant))
     
             #INSERT INTO SUMMARY TABLE
             average_vacant = Decimal(total_days_vacant) / Decimal(num_listings)
             #note if there is no 30 or 60 day for yesterday then set it equal to today
             cursor.execute("""SELECT COALESCE(MAX(units_30), %s), COALESCE(MAX(units_60), %s), COALESCE(MAX(vacant_30), %s), COALESCE(MAX(vacant_60), %s) FROM summary WHERE date_logged = %s AND building_id = %s;""", (num_listings, num_listings, average_vacant, average_vacant, yesterday, building_id))
             items = cursor.fetchone()
-            print("utnis and vacant")
             units_30 = items[0]
             units_60 = items[1]
             vacant_30 = items[2]
             vacant_60 = items[3]
-            print("after unit and vacant")
     
             cursor.execute("""SELECT units_available, days_vacant FROM summary WHERE date_logged = %s AND building_id = %s;""", (date_31, building_id))
             items = cursor.fetchone()
