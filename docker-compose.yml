@@ -1,9 +1,9 @@
 services:
-  mckenzie_scraper:
-    build: .
-    command: python webscraper_mckenzie.py
-    env_file:
-      - .env
+ # mckenzie_scraper:
+ #   build: .
+  #  command: python webscraper_mckenzie.py
+  #  env_file:
+  #    - .env
 
   regeny_scraper:
     build: .
