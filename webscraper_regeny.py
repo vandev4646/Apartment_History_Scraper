@@ -64,6 +64,8 @@ def apartment_data(apartment: Apartment):
     #get the data for each listing
     for url in urls:
         item = list_data(url=url, company=apartment.company, building=apartment.building, city=apartment.city)
+        print("item")
+        print(item)
         if item[0] != "":
             listing_data.append(item)
     #write data from all listings to the csv
