@@ -69,7 +69,8 @@ def apartment_data(apartment: Apartment):
         if item[0] != "":
             listing_data.append(item)
     #write data from all listings to the csv
-    #csv_write(listing_data=listing_data, filename=apartment.filename)
+    #if listing_data != []:
+    #    csv_write(listing_data=listing_data, filename=apartment.filename)
     if listing_data != []:
         db_write(listing_data=listing_data)
 
