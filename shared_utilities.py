@@ -18,7 +18,7 @@ This function writes the tuple data to a csv
 """
 def csv_write(listing_data, filename):
     headers = [
-    "Company", "Building", "City", "Identifier", "Bed", "Bath", "Sq Ft", "Rent Amount",
+    "Building", "Identifier", "Bed", "Bath", "Sq Ft", "Rent Amount",
     "QTY", "Date Logged"
     ]
     file_exists = os.path.isfile(filename)
@@ -49,6 +49,8 @@ def db_write(listing_data):
             num_listings = len(listing_data)
             total_days_vacant = 0
             building_id = listing_data[0][0]
+            print("Building_ID")
+            print(building_id)
     
             for item in listing_data:
                 cursor.execute("""
