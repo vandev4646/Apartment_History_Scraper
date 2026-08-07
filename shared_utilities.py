@@ -18,7 +18,7 @@ This function writes the tuple data to a csv
 """
 def csv_write(listing_data, filename):
     headers = [
-    "Company", "Building", "City", "Identifier", "Bed", "Bath", "Sq Ft", "Rent Amount",
+    "Building", "Identifier", "Bed", "Bath", "Sq Ft", "Rent Amount",
     "QTY", "Date Logged"
     ]
     file_exists = os.path.isfile(filename)
