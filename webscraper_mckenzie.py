@@ -120,6 +120,8 @@ def main():
     apartment_list.append(blackhawk)
     
     for apartment in apartment_list:
+        print("For Apartment")
+        print(apartment)
         apartment_data(apartment=apartment)
 
 
