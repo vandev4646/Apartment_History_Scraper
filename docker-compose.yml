@@ -1,14 +1,12 @@
 services:
   mckenzie_scraper:
     build: .
-    image: apartment_history_scraper-mckenzie:latest
-    command: python -u webscraper_mckenzie.py
+    command: python webscraper_mckenzie.py
     env_file:
       - .env
 
   regeny_scraper:
     build: .
-    image: apartment_history_scraper-regeny:latest
-    command: python -u webscraper_regeny.py
+    command: python webscraper_regeny.py
     env_file:
       - .env

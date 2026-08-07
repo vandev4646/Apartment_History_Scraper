@@ -18,7 +18,7 @@ This function writes the tuple data to a csv
 """
 def csv_write(listing_data, filename):
     headers = [
-    "Building", "Identifier", "Bed", "Bath", "Sq Ft", "Rent Amount",
+    "Company", "Building", "City", "Identifier", "Bed", "Bath", "Sq Ft", "Rent Amount",
     "QTY", "Date Logged"
     ]
     file_exists = os.path.isfile(filename)
@@ -49,14 +49,12 @@ def db_write(listing_data):
             num_listings = len(listing_data)
             total_days_vacant = 0
             building_id = listing_data[0][0]
-            print("Building_ID")
-            print(building_id)
     
             for item in listing_data:
                 cursor.execute("""
                 SELECT COALESCE(MAX(days_vacant), 0) 
                 FROM listings 
-                WHERE date_logged = %s AND identifier = %s;""", (yesterday, item[1]))
+                WHERE date_logged = %s AND identifier = %s AND building_id = %s;""", (yesterday, item[1], building_id))
     
                 days_vacant = (cursor.fetchone()[0])+1;
                 total_days_vacant +=days_vacant

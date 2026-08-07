@@ -2,7 +2,7 @@ from curl_cffi import requests
 from bs4 import BeautifulSoup
 from datetime import date
 
-from shared_utilities import Apartment, csv_write, db_write
+from shared_utilities import Apartment, db_write
 
 #This program scraps data for the Lincoln Street Appartments in Verona
 #NEED TO ADD ERROR HANDLING AND REPORT ON ERRORS
@@ -63,16 +63,10 @@ def apartment_data(apartment: Apartment):
     
     #get the data for each listing
     for url in urls:
-        item = list_data(url=url, company=apartment.company, building=apartment.building, city=apartment.city)
-        print("item")
-        print(item)
-        if item[0] != "":
-            listing_data.append(item)
+        listing_data.append(list_data(url=url, company=apartment.company, building=apartment.building, city=apartment.city))
     #write data from all listings to the csv
-    #if listing_data != []:
-    #    csv_write(listing_data=listing_data, filename=apartment.filename)
-    if listing_data != []:
-        db_write(listing_data=listing_data)
+    #csv_write(listing_data=listing_data, filename=apartment.filename)
+    db_write(listing_data=listing_data)
 
 def main():
     prairie = Apartment(
