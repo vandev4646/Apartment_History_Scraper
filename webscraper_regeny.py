@@ -63,7 +63,9 @@ def apartment_data(apartment: Apartment):
     
     #get the data for each listing
     for url in urls:
-        listing_data.append(list_data(url=url, company=apartment.company, building=apartment.building, city=apartment.city))
+        item = list_data(url=url, company=apartment.company, building=apartment.building, city=apartment.city)
+        if item[0] != "":
+            listing_data.append(item)
     #write data from all listings to the csv
     #csv_write(listing_data=listing_data, filename=apartment.filename)
     db_write(listing_data=listing_data)
