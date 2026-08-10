@@ -64,12 +64,14 @@ def apartment_data(apartment: Apartment):
     #get the data for each listing
     for url in urls:
         item = list_data(url=url, company=apartment.company, building=apartment.building, city=apartment.city)
+        print(item[0])
         if item[0] != "":
             listing_data.append(item)
     #write data from all listings to the csv
     print(len(listing_data))
     #csv_write(listing_data=listing_data, filename=apartment.filename)
-    db_write(listing_data=listing_data)
+    if len(listing_data) != 0:
+        db_write(listing_data=listing_data)
 
 def main():
     prairie = Apartment(
