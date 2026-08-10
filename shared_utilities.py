@@ -52,6 +52,7 @@ def db_write(listing_data):
     
             for item in listing_data:
                 print(item)
+                if item == 0: continue
                 cursor.execute("""
                 SELECT COALESCE(MAX(days_vacant), 0) 
                 FROM listings 
