@@ -59,6 +59,10 @@ def apartment_data(apartment: Apartment):
     URL = apartment.url
     page = requests.get(URL, impersonate="chrome")
     soup = BeautifulSoup(page.content, "lxml")
+    print(f"Status Code: {page.status_code}")
+    if "cloudflare" in page.text.lower() or page.status_code == 403:
+        print("ALERT: Blocked by Cloudflare/Firewall!")
+
     
     #get all the url's on the page and select the ones assoicated with details
     urls = [tag['href'] for tag in soup.find_all(class_="more_detail_btn")]
@@ -77,8 +81,8 @@ def apartment_data(apartment: Apartment):
     print(len(listing_data))
     #csv_write(listing_data=listing_data, filename=apartment.filename)
     if len(listing_data) != 0:
-        #csv_write(listing_data=listing_data, filename=apartment.filename)
-        db_write(listing_data=listing_data)
+        csv_write(listing_data=listing_data, filename=apartment.filename)
+        #db_write(listing_data=listing_data)
 
 def main():
     prairie = Apartment(
