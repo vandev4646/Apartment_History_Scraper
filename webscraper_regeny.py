@@ -33,6 +33,8 @@ def list_data(url, company, building, city):
     soup = BeautifulSoup(page.content, "lxml")
     #extract all the needed fields
     item = soup.find(class_="address-hdng")
+    print("printing item")
+    print(item)
     if item == None: return ("", "", "", "", "", "", "", "", "","", "", "")
     if item.contents == []: return ("", "", "", "", "", "", "", "", "","", "", "")
     identifier = item.contents[0].strip()
