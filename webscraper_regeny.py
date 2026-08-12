@@ -63,7 +63,7 @@ def apartment_data(apartment: Apartment):
     #get all the url's on the page and select the ones assoicated with details
     urls = [tag['href'] for tag in soup.find_all(class_="more_detail_btn")]
     print("printing Urls")
-    print(url)
+    print(urls)
     listing_data = []
     
     #get the data for each listing
