@@ -81,8 +81,8 @@ def apartment_data(apartment: Apartment):
     print(len(listing_data))
     #csv_write(listing_data=listing_data, filename=apartment.filename)
     if len(listing_data) != 0:
-        csv_write(listing_data=listing_data, filename=apartment.filename)
-        #db_write(listing_data=listing_data)
+        #csv_write(listing_data=listing_data, filename=apartment.filename)
+        db_write(listing_data=listing_data)
 
 def main():
     prairie = Apartment(
