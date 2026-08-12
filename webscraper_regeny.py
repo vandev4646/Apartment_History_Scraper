@@ -33,6 +33,7 @@ def list_data(url, company, building, city):
     soup = BeautifulSoup(page.content, "lxml")
     #extract all the needed fields
     item = soup.find(class_="address-hdng")
+    if item == None: return ("", "", "", "", "", "", "", "", "","", "", "")
     if item.contents == []: return ("", "", "", "", "", "", "", "", "","", "", "")
     identifier = item.contents[0].strip()
     bbs = soup.find(class_="bed-bath-std").find_all("span")
@@ -71,7 +72,8 @@ def apartment_data(apartment: Apartment):
     print(len(listing_data))
     #csv_write(listing_data=listing_data, filename=apartment.filename)
     if len(listing_data) != 0:
-        db_write(listing_data=listing_data)
+        csv_write(listing_data=listing_data, filename=apartment.filename)
+        #db_write(listing_data=listing_data)
 
 def main():
     prairie = Apartment(
