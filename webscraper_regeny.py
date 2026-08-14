@@ -1,6 +1,7 @@
 from curl_cffi import requests
 from bs4 import BeautifulSoup
 from datetime import date
+import re
 
 from shared_utilities import Apartment, csv_write, db_write
 
@@ -53,8 +54,41 @@ def list_data(url, company, building, city):
     #return all the data fields collected as a tuple
     return(building, identifier, bed, bath, sqft, formated_rent, 1, formated_date)
 
+"""
+collects the following data points for each item
+- Building
+- Identifier (Address / Unit number if availabe otherwise the desription provided on site)
+- Bed
+- Bath
+- Sq Ft
+- Rent Amount
+- QTY
+- Date Logged
+"""
+def apartment_data(apartment: Apartment):
+    listing_data = []
+    URL = apartment.url
+    page = requests.get(URL, impersonate="chrome")
+    soup = BeautifulSoup(page.content, "lxml")
+    listings = soup.find_all(class_=re.compile("listing-item column mcb-column one-third"))
+    for item in listings:
+        identifier =  "n/a"
+        bed = bath = sqft = rent = 0
+        
+        identifier = item.find(class_="address").text.strip()
+        bed = item.find(class_="beds").text.strip().split(" ")[0]
+        bath = item.find(class_="baths").text.strip().split(" ")[0]
+        sqft = item.find(class_="area").text.strip().split(" ")[0]
+        rent = item.find(class_="rent-price-off").text.split()[1]
+        formated_rent = float(rent.replace("$", "").replace(",", ""))
+        data = (apartment.building, identifier, bed, bath, sqft, formated_rent, 1, formated_date)
+        listing_data.append(data)
 
+    #write data from all listings to the csv
+    csv_write(listing_data=listing_data, filename=apartment.filename)
+    #db_write(listing_data = listing_data)
 
+"""
 def apartment_data(apartment: Apartment):
     URL = apartment.url
     page = requests.get(URL, impersonate="chrome")
@@ -81,9 +115,9 @@ def apartment_data(apartment: Apartment):
     print(len(listing_data))
     #csv_write(listing_data=listing_data, filename=apartment.filename)
     if len(listing_data) != 0:
-        #csv_write(listing_data=listing_data, filename=apartment.filename)
-        db_write(listing_data=listing_data)
-
+        csv_write(listing_data=listing_data, filename=apartment.filename)
+        #db_write(listing_data=listing_data)
+"""
 def main():
     prairie = Apartment(
         "https://regencypm.com/prairie-crest-apartments-verona/",
