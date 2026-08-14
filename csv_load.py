@@ -40,7 +40,7 @@ def main():
                 #print(row[1])
 
                 rent_clean = row[5].replace("$", "").replace(",", "")
-                row[5] = int(rent_clean)
+                row[5] = int(float(rent_clean))
                 #print(row[2])
 
                 # Convert Date Logged 
