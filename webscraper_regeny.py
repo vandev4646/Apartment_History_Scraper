@@ -12,47 +12,6 @@ today = date.today()
 formated_date = today.strftime("%m_%d_%Y")
 
 
-"""
-parm: the url of the list you want to scrap data for
-returns: An tuple with the following data points
-- Company
-- Building
-- City
-- Identifier (Address / Unit number if availabe otherwise the desription provided on site)
-- Bed
-- Bath
-- Sq Ft
-- Rent Amount
-- QTY
-- Date Logged
-"""
-def list_data(url, company, building, city):
-    #get the data from the listing page
-    identifier = available = "n/a"
-    bed = bath = sqft = rent = application_fee = security_deposit = 0
-    page = requests.get(url, impersonate="chrome")
-    soup = BeautifulSoup(page.content, "lxml")
-    #extract all the needed fields
-    item = soup.find(class_="address-hdng")
-    print("printing item")
-    print(item)
-    if item == None: return ("", "", "", "", "", "", "", "", "","", "", "")
-    if item.contents == []: return ("", "", "", "", "", "", "", "", "","", "", "")
-    identifier = item.contents[0].strip()
-    bbs = soup.find(class_="bed-bath-std").find_all("span")
-    bslen = len(bbs)
-    if bslen >= 1:
-        bed = bbs[0].text.strip().split()[0]
-    if bslen >= 2:
-        bath = bbs[1].text.strip().split()[0]
-    if bslen >= 3:
-        sqft = bbs[2].text.strip().split()[1]
-    list_items = soup.find_all(class_="list__item")
-    rent = list_items[0].text.split()[1]
-    formated_rent = float(rent.replace("$", "").replace(",", ""))
-
-    #return all the data fields collected as a tuple
-    return(building, identifier, bed, bath, sqft, formated_rent, 1, formated_date)
 
 """
 collects the following data points for each item
@@ -85,39 +44,9 @@ def apartment_data(apartment: Apartment):
         listing_data.append(data)
 
     #write data from all listings to the csv
-    csv_write(listing_data=listing_data, filename=apartment.filename)
-    #db_write(listing_data = listing_data)
-
-"""
-def apartment_data(apartment: Apartment):
-    URL = apartment.url
-    page = requests.get(URL, impersonate="chrome")
-    soup = BeautifulSoup(page.content, "lxml")
-    print(f"Status Code: {page.status_code}")
-    if "cloudflare" in page.text.lower() or page.status_code == 403:
-        print("ALERT: Blocked by Cloudflare/Firewall!")
-
-    
-    #get all the url's on the page and select the ones assoicated with details
-    urls = [tag['href'] for tag in soup.find_all(class_="more_detail_btn")]
-    print("printing Urls")
-    print(urls)
-    listing_data = []
-    
-    #get the data for each listing
-    for url in urls:
-        item = list_data(url=url, company=apartment.company, building=apartment.building, city=apartment.city)
-        print(item[0])
-        if item[0] != "":
-            listing_data.append(item)
-    #write data from all listings to the csv
-    print("printing the length")
-    print(len(listing_data))
     #csv_write(listing_data=listing_data, filename=apartment.filename)
-    if len(listing_data) != 0:
-        csv_write(listing_data=listing_data, filename=apartment.filename)
-        #db_write(listing_data=listing_data)
-"""
+    db_write(listing_data = listing_data)
+
 def main():
     prairie = Apartment(
         "https://regencypm.com/prairie-crest-apartments-verona/",
