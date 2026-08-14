@@ -137,7 +137,7 @@ def db_write_csv(listing_data):
     
             cursor = connection.cursor()
     
-            today = listing_data[0][11]
+            today = listing_data[0][7]
             yesterday = today - timedelta(days=1)
             date_31 = today - timedelta(days=31)
             date_61 = today - timedelta(days=61)
@@ -150,7 +150,7 @@ def db_write_csv(listing_data):
                 cursor.execute("""
                 SELECT COALESCE(MAX(days_vacant), 0) 
                 FROM listings 
-                WHERE date_logged = %s AND identifier = %s;""", (yesterday, item[3]))
+                WHERE date_logged = %s AND identifier = %s AND building_id = %s;""", (yesterday, item[1], building_id))
     
                 days_vacant = (cursor.fetchone()[0])+1;
                 total_days_vacant +=days_vacant
@@ -158,7 +158,7 @@ def db_write_csv(listing_data):
                 cursor.execute("""
                 INSERT INTO listings (
                     building_id, identifier, bed, bath, sq_ft, rent_amount, qty, days_vacant, date_logged
-                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);""", (item[1], item[3], item[4], item[5], item[6], item[8], 1, days_vacant, item[11]))
+                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);""", (item[0], item[1], item[2], item[3], item[4], item[5], item[6], days_vacant, item[7]))
     
             #INSERT INTO SUMMARY TABLE
             average_vacant = Decimal(total_days_vacant) / Decimal(num_listings)

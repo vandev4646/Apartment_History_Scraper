@@ -39,13 +39,13 @@ def main():
                 row[1] = building_mapping.get(building_name, building_name)
                 #print(row[1])
 
-                rent_clean = row[8].replace("$", "").replace(",", "")
-                row[8] = int(rent_clean)
+                rent_clean = row[5].replace("$", "").replace(",", "")
+                row[5] = int(rent_clean)
                 #print(row[2])
 
-                # 2. Convert Date Logged (Index 11)
-                date_obj = datetime.strptime(row[11], "%m_%d_%Y").date()
-                row[11] = date_obj
+                # Convert Date Logged 
+                date_obj = datetime.strptime(row[7], "%m_%d_%Y").date()
+                row[7] = date_obj
                 #print(row[11])
 
                 data_list.append(row)
