@@ -29,6 +29,18 @@ def csv_write(listing_data, filename):
             writer.writerow(headers)
         writer.writerows(listing_data)
 
+"""
+parm: a list of tuples containing appartment data. 
+Each tuple must be in the following format:
+- Building: int
+- Identifier (Address / Unit number if availabe otherwise the desription provided on site): str
+- Bed: str
+- Bath: str
+- Sq Ft: str
+- Rent Amount: float
+- QTY: int
+This function writes the tuple data to the db
+"""
 def db_write(listing_data):
     try:
             connection = psycopg2.connect(
