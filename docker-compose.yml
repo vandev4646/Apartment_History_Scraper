@@ -4,9 +4,13 @@ services:
     command: python webscraper_mckenzie.py
     env_file:
       - .env
+    environment:
+      - PYTHONUNBUFFERED=1
 
   regeny_scraper:
     build: .
     command: python webscraper_regeny.py
     env_file:
       - .env
+    environment:
+      - PYTHONUNBUFFERED=1

@@ -49,6 +49,7 @@ def apartment_data(apartment: Apartment):
     #write data from all listings to the csv
     #csv_write(listing_data=listing_data, filename=apartment.filename)
     db_write(listing_data = listing_data)
+    print(f'Write finished for {apartment.filename}')
 
 def main():
     
@@ -118,9 +119,12 @@ def main():
     apartment_list.append(highland)
     apartment_list.append(boulder_creek)
     apartment_list.append(blackhawk)
-    
+    print("McKenzie Script")
+    apartment_count = 0
     for apartment in apartment_list:
         apartment_data(apartment=apartment)
+        apartment_count = apartment_count+1
+    print(f'Data was sucessfully written for {apartment_count} buildings')
 
 
 if __name__=="__main__":

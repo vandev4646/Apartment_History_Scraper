@@ -1,3 +1,4 @@
+
 from curl_cffi import requests
 from bs4 import BeautifulSoup
 
@@ -14,3 +15,5 @@ identifier = table_rows[0].find('td', {'data-label': 'Style'}).get_text(strip=Tr
 sqft = table_rows[0].find('td', {'data-label': 'Sq Ft'}).get_text(strip=True)
 rent = table_rows[0].find('td', {'data-label': 'Price'}).get_text(strip=True)
 clean_rent = float(rent.replace("$", "").replace(",", ""))
+
+
