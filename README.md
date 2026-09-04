@@ -17,7 +17,7 @@ If you would like to see an apartment complex reported on, you can contribute to
 3. Create a **READ.md** which lists the company name, building name, and URL for each building you are scraping for. This information helps us add the building details to our database.
 4. **Commit** your changes and **open a pull request** against the main repository.
 
-**NOTE**: If you would like help getting started, check out this demo on how to scrap a site and contribute to this repo.
+**NOTE**: If you would like help getting started, check out this demo on how to scrap a site and contribute to this repo: https://youtu.be/hdsz15XCM10.
 
 ### What your .py file must do
 

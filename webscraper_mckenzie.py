@@ -2,8 +2,9 @@ from curl_cffi import requests
 from bs4 import BeautifulSoup
 from datetime import date
 import re
+import cloudscraper
 
-from shared_utilities import Apartment, db_write
+from shared_utilities import Apartment, csv_write, db_write
 
 #This program scraps data for the Lincoln Street Appartments in Verona
 #NEED TO ADD ERROR HANDLING AND REPORT ON ERRORS
@@ -28,9 +29,11 @@ collects the following data points for each item
 def apartment_data(apartment: Apartment):
     listing_data = []
     URL = apartment.url
-    page = requests.get(URL, impersonate="chrome")
-    soup = BeautifulSoup(page.content, "lxml")
+    scraper = cloudscraper.create_scraper()
+    page = scraper.get(URL)
+    soup = BeautifulSoup(page.text, 'html.parser')
     listings = soup.find_all(class_=re.compile("row row-eq-height vmiddle row-striped br"))
+    print(listings)
     for item in listings:
         identifier = available = "n/a"
         bed = bath = sqft = rent = 0

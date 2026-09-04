@@ -2,6 +2,7 @@ from curl_cffi import requests
 from bs4 import BeautifulSoup
 from datetime import date
 import re
+import cloudscraper
 
 from shared_utilities import Apartment, csv_write, db_write
 
@@ -27,8 +28,9 @@ collects the following data points for each item
 def apartment_data(apartment: Apartment):
     listing_data = []
     URL = apartment.url
-    page = requests.get(URL, impersonate="chrome")
-    soup = BeautifulSoup(page.content, "lxml")
+    scraper = cloudscraper.create_scraper()
+    page = scraper.get(URL)
+    soup = BeautifulSoup(page.text, 'html.parser')
     listings = soup.find_all(class_=re.compile("listing-item column mcb-column one-third"))
     for item in listings:
         identifier =  "n/a"
