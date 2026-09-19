@@ -14,10 +14,10 @@ If you would like to see an apartment complex reported on, you can contribute to
 
 1. **Fork** this repo and **clone** it locally
 2. Create a **new branch** based off of main and add your scraping script to a file named: **webscraper_companyName.py**. See below for details on what your file must contain.
-3. Create a **READ.md** which lists the company name, building name, and URL for each building you are scraping for. This information helps us add the building details to our database.
+3. Create a **README.md** which lists the company name, building name, and URL for each building you are scraping for. This information helps us add the building details to our database.
 4. **Commit** your changes and **open a pull request** against the main repository.
 
-**NOTE**: If you would like help getting started, check out this demo on how to scrap a site and contribute to this repo: https://youtu.be/hdsz15XCM10.
+**NOTE**: If you would like help getting started, check out this demo on how to scrape a site and contribute to this repo: https://youtu.be/hdsz15XCM10.
 
 ### What your .py file must do
 
